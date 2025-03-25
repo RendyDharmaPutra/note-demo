@@ -1,0 +1,30 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: note_demo_frontend
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+  api:
+    build: ./api
+    container_name: note_demo_api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./api:/app
+      - /app/node_modules
+  database:
+    image: mysql:lts
+    container_name: note_demo_database
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=app_db
+    volumes:
+      - database:/var/lib/mysql
+
+volumes:
+  database:
