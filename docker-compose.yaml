@@ -3,7 +3,9 @@ services:
     build: ./frontend
     container_name: note_demo_frontend
     ports:
-      - "5173:5173"
+      - "${FRONTEND_PORT}:5173"
+    environment:
+      - API_URL=http://localhost:${API_PORT}
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -11,7 +13,13 @@ services:
     build: ./api
     container_name: note_demo_api
     ports:
-      - "3000:3000"
+      - "${API_PORT}:3000"
+    environment:
+      - DB_PORT=3306
+      - DB_HOST=${DB_HOST}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     volumes:
       - ./api:/app
       - /app/node_modules
@@ -19,10 +27,10 @@ services:
     image: mysql:lts
     container_name: note_demo_database
     ports:
-      - "3307:3306"
+      - "${DB_PORT}:3306"
     environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=app_db
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_DATABASE=${DB_NAME}
     volumes:
       - database:/var/lib/mysql
 
